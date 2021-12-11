@@ -7,8 +7,8 @@ package com.phillee.springframework.bean;
  */
 public class UserService {
 
-    public void queryUserInfo() {
-        System.out.println("查询用户信息");
+    public void queryUserInfo(String msg) {
+        System.out.println("第" + msg +"次被调用");
     }
 
 }

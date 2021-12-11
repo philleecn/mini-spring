@@ -1,8 +1,8 @@
 package com.phillee.springframework.bean.com.phillee.springframework;
 
-import com.phillee.springframework.BeanDefinition;
-import com.phillee.springframework.BeanFactory;
 import com.phillee.springframework.bean.UserService;
+import com.phillee.springframework.beans.factory.config.BeanDefinition;
+import com.phillee.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.junit.Test;
 
 /**
@@ -15,17 +15,21 @@ public class MethodTest {
     @Test
     public void testBeanFactory() {
 
-        //初始化bean
-        BeanFactory beanFactory = new BeanFactory();
+        // 1.初始化 BeanFactory
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 
-        //注册bean
-        BeanDefinition beanDefinition = new BeanDefinition(new UserService());
-
+        // 2.注册 bean
+        BeanDefinition beanDefinition = new BeanDefinition(UserService.class);
         beanFactory.registerBeanDefinition("userService", beanDefinition);
 
-        //获取bean
+        // 3.第一次获取 bean
         UserService userService = (UserService) beanFactory.getBean("userService");
-        userService.queryUserInfo();
+        userService.queryUserInfo("1");
+
+        // 4.第二次获取 bean from Singleton
+        UserService userService_singleton = (UserService) beanFactory.getBean("userService");
+        userService_singleton.queryUserInfo("2");
+
     }
 
 }
