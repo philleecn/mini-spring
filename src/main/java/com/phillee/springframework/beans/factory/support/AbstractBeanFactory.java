@@ -1,5 +1,6 @@
 package com.phillee.springframework.beans.factory.support;
 
+import com.phillee.springframework.beans.BeansException;
 import com.phillee.springframework.beans.factory.BeanFactory;
 import com.phillee.springframework.beans.factory.config.BeanDefinition;
 
@@ -13,16 +14,27 @@ import java.util.Objects;
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
 
     @Override
-    public Object getBean(String name) {
-
-        Object bean = getSingleton(name);
-        if (Objects.nonNull(bean)) { return bean; }
-
-        BeanDefinition beanDefinition = getBeanDefinition(name);
-        return createBean(name, beanDefinition);
+    public Object getBean(String name) throws BeansException {
+        return doGetBean(name, null);
     }
 
-    protected abstract Object createBean(String beanName, BeanDefinition beanDefinition);
+    @Override
+    public Object getBean(String name, Object... args) throws BeansException {
+        return doGetBean(name, args);
+    }
+
+    protected <T> T doGetBean(final String name, final Object[] args) {
+        Object bean = getSingleton(name);
+        if (bean != null) {
+            return (T) bean;
+        }
+
+        BeanDefinition beanDefinition = getBeanDefinition(name);
+        return (T) createBean(name, beanDefinition, args);
+    }
+
+
+    protected abstract Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args);
 
     protected abstract BeanDefinition getBeanDefinition(String beanName);
 

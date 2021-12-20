@@ -1,9 +1,6 @@
 package com.phillee.springframework.beans.factory;
 
-import com.phillee.springframework.beans.factory.config.BeanDefinition;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import com.phillee.springframework.beans.BeansException;
 
 /**
  * @Description: Bean工厂：注册Bean、获取Bean
@@ -13,6 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public interface BeanFactory {
 
     //获取bean
-    public Object getBean(String name);
+    Object getBean(String name) throws BeansException;
+
+    Object getBean(String name, Object... args) throws BeansException;
 
 }
