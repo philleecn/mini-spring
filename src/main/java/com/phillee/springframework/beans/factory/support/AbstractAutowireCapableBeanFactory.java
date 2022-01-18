@@ -1,7 +1,12 @@
 package com.phillee.springframework.beans.factory.support;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.phillee.springframework.beans.BeansException;
+import com.phillee.springframework.beans.PropertyValue;
+import com.phillee.springframework.beans.PropertyValues;
 import com.phillee.springframework.beans.factory.config.BeanDefinition;
+import com.phillee.springframework.beans.factory.config.BeanReference;
+import sun.swing.BeanInfoUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.Objects;
@@ -21,7 +26,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         Object bean = null;
 
         try {
+
             bean = createBeanInstance(beanName, beanDefinition, args);
+
+            //给bean填充属性
+            applyPropertyValues(beanName, beanDefinition, bean);
+
         } catch (Exception e) {
             throw new BeansException("Instantiation of bean failed", e);
         }
@@ -29,6 +39,34 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         addSingleton(beanName, bean);
 
         return bean;
+    }
+
+    /***
+     * @Description: Bean属性填充
+     * @Param: [java.lang.String, com.phillee.springframework.beans.factory.config.BeanDefinition, java.lang.Object]
+     * @Return: void
+     */
+    private void applyPropertyValues(String beanName, BeanDefinition beanDefinition, Object bean) {
+
+        try {
+            PropertyValues propertyValues = beanDefinition.getPropertyValues();
+
+            for (PropertyValue propertyValue : propertyValues.getPropertyValues()) {
+                String name = propertyValue.getName();
+                Object value = propertyValue.getValue();
+
+                if (value instanceof BeanReference) {
+                    // A依赖B，获取B的实例化
+                    BeanReference beanReference = (BeanReference) value;
+                    value = getBean(beanReference.getBeanName());
+                }
+
+                BeanUtil.setFieldValue(bean, name, value);
+            }
+        } catch (BeansException e) {
+            throw new BeansException("Error setting property values：" + beanName);
+        }
+
     }
 
     private Object createBeanInstance(String beanName, BeanDefinition beanDefinition, Object[] args) throws NoSuchMethodException {

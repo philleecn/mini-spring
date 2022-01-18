@@ -1,7 +1,11 @@
 package com.phillee.springframework.bean.com.phillee.springframework;
 
+import com.phillee.springframework.bean.UserDao;
 import com.phillee.springframework.bean.UserService;
+import com.phillee.springframework.beans.PropertyValue;
+import com.phillee.springframework.beans.PropertyValues;
 import com.phillee.springframework.beans.factory.config.BeanDefinition;
+import com.phillee.springframework.beans.factory.config.BeanReference;
 import com.phillee.springframework.beans.factory.support.DefaultListableBeanFactory;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.NoOp;
@@ -24,12 +28,20 @@ public class MethodTest {
         // 1.初始化 BeanFactory
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 
-        // 2.注册 bean
-        BeanDefinition beanDefinition = new BeanDefinition(UserService.class);
+        // 2.注册 userDao
+        beanFactory.registerBeanDefinition("userDao", new BeanDefinition(UserDao.class));
+
+        // 3. UserService 设置属性[uId、userDao]
+        PropertyValues propertyValues = new PropertyValues();
+        propertyValues.addPropertyValue(new PropertyValue("uId", "10001"));
+        propertyValues.addPropertyValue(new PropertyValue("userDao",new BeanReference("userDao")));
+
+        // 4.UserService 注入 bean
+        BeanDefinition beanDefinition = new BeanDefinition(UserService.class, propertyValues);
         beanFactory.registerBeanDefinition("userService", beanDefinition);
 
-        // 3.获取 bean
-        UserService userService = (UserService) beanFactory.getBean("userService", "xxx");
+        // 5.UserService 获取 bean
+        UserService userService = (UserService) beanFactory.getBean("userService");
         userService.queryUserInfo();
 
     }
@@ -88,5 +100,6 @@ public class MethodTest {
         Object o = enhancer.create(new Class[]{String.class}, new Object[]{"xxx"});
         System.out.println(o);
     }
+
 
 }

@@ -1,5 +1,7 @@
 package com.phillee.springframework.bean;
 
+import lombok.Data;
+import lombok.ToString;
 import org.junit.BeforeClass;
 
 /**
@@ -7,20 +9,16 @@ import org.junit.BeforeClass;
  * @Author: PhilLee
  * @Date: 2021/12/10 11:03
  */
+@Data
+@ToString
 public class UserService {
 
-    private String username;
+    private String uId;
 
-    public UserService(String username) {
-        this.username = username;
-    }
+    private UserDao userDao;
 
     public void queryUserInfo() {
-        System.out.println("查询用户信息" + username);
+        System.out.println("查询用户信息：" + userDao.queryUserNameByUid(uId));
     }
 
-    @Override
-    public String toString() {
-        return new StringBuilder("").append("").append(username).toString();
-    }
 }
