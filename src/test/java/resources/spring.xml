@@ -6,7 +6,12 @@
 
     <bean id="userService" class="com.phillee.springframework.bean.UserService">
         <property name="uId" value="10001"/>
+        <property name="company" value="??"/>
+        <property name="location" value="??"/>
         <property name="userDao" ref="userDao"/>
     </bean>
+
+    <bean class="com.phillee.springframework.common.MyBeanPostProcessor"/>
+    <bean class="com.phillee.springframework.common.MyBeanFactoryPostProcessor"/>
 
 </beans>

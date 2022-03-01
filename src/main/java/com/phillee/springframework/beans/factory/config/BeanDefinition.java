@@ -17,6 +17,10 @@ public class BeanDefinition {
 
     private PropertyValues propertyValues;
 
+    private String initMethodName;
+
+    private String destroyMethodName;
+
     public BeanDefinition(Class beanClass) {
         this.beanClass = beanClass;
         this.propertyValues = new PropertyValues();
@@ -26,4 +30,5 @@ public class BeanDefinition {
         this.beanClass = beanClass;
         this.propertyValues = propertyValues != null ? propertyValues : new PropertyValues();
     }
+
 }

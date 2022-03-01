@@ -17,6 +17,10 @@ public class UserService {
 
     private UserDao userDao;
 
+    private String company;
+
+    private String location;
+
     public String queryUserInfo() {
         return userDao.queryUserNameByUid(uId);
     }

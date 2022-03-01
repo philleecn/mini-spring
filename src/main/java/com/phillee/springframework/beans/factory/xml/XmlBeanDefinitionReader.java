@@ -21,7 +21,7 @@ import java.io.InputStream;
  * @Author: PhilLee
  * @Date: 2022/1/18 20:56
  */
-public  class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
+public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
     public XmlBeanDefinitionReader(BeanDefinitionRegistry registry) {
         super(registry);
@@ -54,6 +54,13 @@ public  class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         ResourceLoader resourceLoader = getResourceLoader();
         Resource resource = resourceLoader.getResource(location);
         loadBeanDefinitions(resource);
+    }
+
+    @Override
+    public void loadBeanDefinitions(String... location) throws BeansException {
+        for (String s : location) {
+            loadBeanDefinitions(s);
+        }
     }
 
     private void doLoadBeanDefinitions(InputStream inputStream) throws ClassNotFoundException {
